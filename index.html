@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CEK LAUT</title>
+    <meta charset="utf-8" />
+    <link rel="icon" type="icon/x-image" href="images/OL.svg" onerror="this.onerror=null; this.src='image.png'">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="description" content="Show geometric distribution">
+    <meta name="author" content="Victor Bom">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div id="slider" style="top: 0px;right: 1px;margin: -7px 70px;margin-right: -144px;"><ul class="sliderLabels" style="margin-right: 37%;margin-left: auto;width: 20.5%;margin-bottom: -10px;font-size: x-small;color: whitesmoke;"><li id="li0">Hari ini</li><li id="li1">H+1  </li><li id="li2">H+2  </li><li id="li3">H+3</li></ul></div>
+    <div style="margin-right: auto; margin-left: auto; width: 93%; margin-bottom: 10px; text-align: center; font-size: x-large;color: whitesmoke;">
+    <b>PERIODE : <span id="demo"> </span> <span id="Date"> </span></b>
+    <input type="range" min="-1" max="3" value="-1" step="1" id="myRange" class="slider" class="text-slider" list="ticks1"><datalist id="ticks1"><option>0</option><option>1</option><option>2</option><option>3</option></datalist></div>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    
+</head>
+  <body>
+    <nav class="nav">
+      <div class="social text-gray">
+        <a href="mailto: fikrul.islamy@gmail.com"><i class="fa fa-envelope-square"></i></a>
+        <a href="https://www.linkedin.com/in/fikrul-islamy-445742157/"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.researchgate.net/profile/Fikrul-Islamy"><i class="fab fa-researchgate"></i></a>
+        <a href="https://github.com/00fikrul00"><i class="fab fa-github"></i></a>
+      </div>
+    </nav>
+    <div id="map"></div>
+    
+    <!--vendor-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY5rzwu8Cqr4I4fX8VYsmTshCXTT6KwZM&callback=initMap&libraries=&v=weekly"
+        defer></script>
+    <!--leaflet-velocity-->
+    <link rel="stylesheet" href="dist/leaflet-velocity.css"/>
+    <script src="dist/leaflet-velocity.js"></script>
+    <script src="dist/leaflet-velocity_curr.js"></script>
+    <!--Tool-->`
+    <script src="js/leaflet-measure.js"></script>
+    <script src="js/Control.OSMGeocoder.js"></script>
+    <script src="leaflet/leaflet-control-topcenter.js"></script>
+    <link rel="stylesheet" href="css/leaflet-measure.css">
+    <link rel="stylesheet" href="css/Control.OSMGeocoder.css">
+    <!-- --> 
+    <script src="dist/leaflet.groupedlayercontrol.min.js"></script>
+    <script src="js/leaflet-idw+directdraw.js"></script>
+    <script src="js/turf.min.js" charset="utf-8"></script>   
+    <!--Demo-->
+    <link rel="stylesheet" href="gis_web.css" />
+    <script src="gis_web.js"></script>
+    <script>
+      var osmGeocoder = new L.Control.OSMGeocoder({
+                    collapsed: false,
+                    position: 'topcenter',
+                    text: 'Cari',
+                });
+			osmGeocoder.addTo(map);
+      var measureControl = new L.Control.Measure({
+                    position: 'topright',
+                    primaryLengthUnit: 'meters',
+                    secondaryLengthUnit: 'kilometers',
+                    primaryAreaUnit: 'sqmeters',
+                    secondaryAreaUnit: 'hectares'
+                }); 
+			measureControl.addTo(map);
+      map.zoomControl.setPosition('topright');
+    </script>
+    <script>
+      //---------GET KOORDINAT ----------//
+      map.on('click', function(e){
+                var lt = String(e.latlng.lat),
+                lg = String(e.latlng.lng);
+                var popup = L.popup()
+                    .setLatLng(e.latlng)
+                    .setContent(lt + "," + lg)
+                    .openOn(map);
+                });
+      //---------GET KOORDINAT ----------//
+      
+    </script>
+    <!--- Data--->
+    <script src="data/WPPNRI_3.js"></script></script>
+    <script src="data/PELABUHAN_INDONESIA_2.js"></script>
+    <script src="data/counties_0.js"></script>
+
+    <script>
+    //----WPP NRI----//
+      function getColor(d) {
+          return d == '571.0' ? '#303F9F' :
+              d == '572.0'  ? '#1976D2' :
+              d == '573.0'  ? '#03A9F4' :
+              d == '711.0'  ? '#00796B' :
+              d == '712.0'  ? '#388E3C' :
+              d == '713.0'  ? '#689F38' :
+              d == '714.0'  ? '#AFB42B' :
+              d == '715.0'  ? '#FFEB3B' :
+              d == '716.0'  ? '#FFC107' :
+              d == '717.0'  ? '#FF9800' :
+              d == '718.0'  ? '#FF5722' :
+              d == '719.0'  ? '#F44336' :
+                              '#00796B';
+      }
+        function style(feature) {
+          return {
+              opacity: 0.7,
+              color: "transparant",
+              fillOpacity: 0.7,
+              fillColor: getColor(feature.properties.wpp_id)
+          };
+      }
+        function onEachFeature(feature, layer) {
+          // DO THIS FOR EACH COUNTRY
+          // events
+          console.log(feature);
+          layer.bindLabel(feature.properties.wpp_id );
+
+          var label = L.marker(layer.getBounds().getCenter(), {
+              icon: L.divIcon({
+                  className: 'countryLabel',
+                  html: feature.properties.wpp_id,
+                  iconSize: [0, 0]
+              }),
+              onEachFeature: onEachFeature
+          }).addTo(map);
+      }
+      gjson = L.geoJson(json_WPPNRI_3, {
+          style: style
+      })
+      map.addLayer(gjson)
+      map.on('zoomend',
+          function () {
+              if (map.getZoom() <= 5 && !map.hasLayer(gjson)) {
+                  map.addLayer(gjson);
+              }
+              if (map.getZoom() > 6 && map.hasLayer(gjson)) {
+                  map.removeLayer(gjson)
+              }
+          }
+      );
+    //--X--WPP NRI--X--//
+    //--X--COUNTRY--X--//
+    country = L.geoJson(json_counties_0, {
+        style:  function (feature) {
+        return {
+            weight: 2,
+            opacity: 1,
+            color: '#332d2d',
+            fillOpacity: 1
+        };
+      }
+    })
+    .addTo(map);
+    //--X--COUNTRY--X--//
+    </script>
+    
+    <script>
+      var legend = L.control({ position: 'bottomright' });
+      legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend'),
+              
+              categories = [571, 572, 573, 711, 712, 713, 714, 715, 716, 717, 718],
+              labels = ['<strong>Keterangan</strong>']
+              label = ["leaflet/images/anchor.svg"];
+          // loop through our density intervals and generate a label with a colored square for each interval
+          
+          for (var i = 0; i < categories.length; i++) {
+
+              div.innerHTML +=
+                  labels.push(
+                      '<i class="circle" style="background:' + getColor(categories[i]) + '"></i> ' +
+                      (categories[i] ? categories[i] : '+'));
+          }
+          
+          div.innerHTML = labels.join('<br>');
+          div.innerHTML +=
+                  ("<br><img src="+ label +" height='10' width='12'>") + '</i><span>Pelabuhan</span><br>';
+          return div;
+      };
+      legend.addTo(map);
+      var baseLayers = {
+        "WPP NRI": gjson
+      };
+      L.control.layers(null, baseLayers,  {collapsed: false}).setPosition ('bottomright').addTo(map)
+    </script>
+    <script>
+      //---- LAYER PELABUHAN ----//
+      var anchorIcon = L.icon({
+          iconUrl: 'leaflet/images/anchor.svg',
+          iconSize: [18, 18],
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -10],
+          labelAnchor: [10, 0] // as I want the label to appear 2px past the icon (18 + 2 - 6)
+      });
+
+      function popup(feature, layer) {
+        layer.bindPopup(feature.properties.nama_pelab + "</p>Kelas Pelabuhan: " + feature.properties.kelas_pela +
+              "</p>Lokasi: " + feature.properties.kabupaten_ + " - " + feature.properties.propinsi +
+              "</p>Status Aktif: " + feature.properties.aktif);
+      };
+      L.geoJson(json_PELABUHAN_INDONESIA_2, {
+        onEachFeature: popup ,
+        pointToLayer: function (feature, latlng) {
+          return L.marker(latlng, {
+                  icon: anchorIcon
+              });
+            }}).addTo(map).on('click', function () {
+          m.setLabelNoHide(noHide);
+          noHide = !noHide;
+      });
+      //--x-- LAYER PELABUHAN --x--//
+      map.createPane('labels');
+      map.getPane('labels').style.zIndex = 1000;
+      var positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+              attribution: '©OpenStreetMap, ©CartoDB',
+              pane: 'labels'
+      }).addTo(map);
+
+    </script>
+    <script src="leaflet/oce_legenda.js"></script>
+  </body>
+</html>
