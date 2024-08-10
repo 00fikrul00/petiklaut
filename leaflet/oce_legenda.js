@@ -66,12 +66,12 @@ var div = L.DomUtil.create('div'),
 };
 map.on('overlayadd', function(eventLayer){
     if (eventLayer.name === "Kelembapan Udara"){
-        map.addControl(legendW);
+        map.addControl(legendK);
     } 
 });
 map.on('overlayremove', function(eventLayer){
     if (eventLayer.name === "Kelembapan Udara"){
-        map.removeControl(legendW);
+        map.removeControl(legendK);
     } 
 });
 
