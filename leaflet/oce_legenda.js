@@ -40,7 +40,7 @@ map.on('overlayremove', function(eventLayer){
 var legendW = L.control({ position: 'bottomcenter' });
 legendW.onAdd = function (map) {     
 var div = L.DomUtil.create('div'),
-    labelx = ["leaflet/images/WAVE.svg"];
+    labelx = ["leaflet/images/TinggiGelombang.svg"];
     div.innerHTML +=
             ("<br><img src="+ labelx +" height='50' width='500'>")
     return div;
