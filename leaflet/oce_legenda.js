@@ -56,8 +56,8 @@ map.on('overlayremove', function(eventLayer){
     } 
 });
 
-var legendW = L.control({ position: 'bottomcenter' });
-legendW.onAdd = function (map) {     
+var legendK = L.control({ position: 'bottomcenter' });
+legendK.onAdd = function (map) {     
 var div = L.DomUtil.create('div'),
     labelx = ["leaflet/images/Kelembapan.svg"];
     div.innerHTML +=
